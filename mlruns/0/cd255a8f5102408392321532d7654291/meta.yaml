@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/cd255a8f5102408392321532d7654291/artifacts
+end_time: 1746696282880
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: cd255a8f5102408392321532d7654291
+run_name: sincere-doe-330
+run_uuid: cd255a8f5102408392321532d7654291
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746696274653
+status: 3
+tags: []
+user_id: T440

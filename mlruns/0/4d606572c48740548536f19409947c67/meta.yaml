@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/4d606572c48740548536f19409947c67/artifacts
+end_time: 1746697531473
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4d606572c48740548536f19409947c67
+run_name: kindly-tern-699
+run_uuid: 4d606572c48740548536f19409947c67
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746697527056
+status: 3
+tags: []
+user_id: T440

@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/1e5fb858aade4d74814f5d1e8fe053b7/artifacts
+end_time: 1746727858649
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1e5fb858aade4d74814f5d1e8fe053b7
+run_name: angry-bug-9
+run_uuid: 1e5fb858aade4d74814f5d1e8fe053b7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746727854392
+status: 3
+tags: []
+user_id: T440

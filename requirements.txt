@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+mlflow
+scikit-learn
+pydantic
+numpy
+neptune
+#could be problematic
+apache-airflow
+pandas
+streamlit

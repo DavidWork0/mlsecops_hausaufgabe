@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/538d9c92244a426e899ac70996b07e77/artifacts
+end_time: 1746727478877
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 538d9c92244a426e899ac70996b07e77
+run_name: bouncy-newt-439
+run_uuid: 538d9c92244a426e899ac70996b07e77
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746727474652
+status: 3
+tags: []
+user_id: T440

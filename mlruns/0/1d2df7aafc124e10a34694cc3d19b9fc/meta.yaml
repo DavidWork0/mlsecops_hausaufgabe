@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/1d2df7aafc124e10a34694cc3d19b9fc/artifacts
+end_time: 1746724426104
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1d2df7aafc124e10a34694cc3d19b9fc
+run_name: calm-mole-922
+run_uuid: 1d2df7aafc124e10a34694cc3d19b9fc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746724421725
+status: 3
+tags: []
+user_id: T440

@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/4fa87f54308b4104b1e886b96903f979/artifacts
+end_time: 1746726938825
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4fa87f54308b4104b1e886b96903f979
+run_name: illustrious-ox-52
+run_uuid: 4fa87f54308b4104b1e886b96903f979
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746726934629
+status: 3
+tags: []
+user_id: T440

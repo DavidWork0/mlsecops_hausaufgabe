@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/a6968dd1df754f24985844632979b442/artifacts
+end_time: 1746697726649
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a6968dd1df754f24985844632979b442
+run_name: clumsy-dolphin-699
+run_uuid: a6968dd1df754f24985844632979b442
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746697722292
+status: 3
+tags: []
+user_id: T440
