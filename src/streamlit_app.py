@@ -17,7 +17,7 @@ sepal_width = st.number_input('Sepal width (cm)', min_value=0.0, max_value=10.0,
 petal_length = st.number_input('Petal length (cm)', min_value=0.0, max_value=10.0, value=1.4)
 petal_width = st.number_input('Petal width (cm)', min_value=0.0, max_value=10.0, value=0.2)
 
-if st.button('Predikció!'):
+if st.button('Predikció'):
     # REST API hívás
     data = {
         'sepal_length': sepal_length,
