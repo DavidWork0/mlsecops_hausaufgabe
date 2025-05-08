@@ -107,7 +107,6 @@ try:
     # A főfolyamat folyamatosan fut
     while True:
         time.sleep(1)
-        
         # Ellenőrizzük, hogy a folyamatok még mindig futnak-e
         for name, proc in processes.items():
             if proc and proc.poll() is not None:
