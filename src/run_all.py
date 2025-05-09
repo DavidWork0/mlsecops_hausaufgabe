@@ -19,7 +19,15 @@ import signal
 def run_process(command, name):
     print(f"Indítás: {name}...")
     try:
-        proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Redirecting stderr to stdout to capture all output
+        proc = subprocess.Popen(
+            command, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            universal_newlines=True
+        )
         return proc
     except Exception as e:
         print(f"Hiba a(z) {name} indítása során: {e}")
@@ -58,11 +66,9 @@ try:
 except subprocess.CalledProcessError as e:
     print(f"Hiba a Neptune AI monitoring futtatása során: {e}")
 
-# Streamlit dashboard indítása háttérben
-streamlit_proc = run_process(["streamlit", "run", "src/streamlit_app.py"], "Streamlit Dashboard")
-time.sleep(5)  # Több időt adunk a Streamlit indulásához
+streamlit_proc = run_process(["streamlit", "run", "src/streamlit_app.py", "--server.headless=true", "--server.port=8501"], "Streamlit Dashboard")
+time.sleep(7)  # Több időt adunk a Streamlit indulásához
 if streamlit_proc:
-    counter = 0
     webbrowser.open("http://localhost:8501")
     print("Streamlit Dashboard elérhetősége: http://localhost:8501")
 else:
@@ -104,13 +110,44 @@ signal.signal(signal.SIGINT, shutdown_gracefully)
 signal.signal(signal.SIGTERM, shutdown_gracefully)
 
 try:
+    # Nyomon követjük, hogy streamlit-et már megnyitottuk-e
+    streamlit_opened = False
+    if streamlit_proc:
+        streamlit_opened = True
+    
     # A főfolyamat folyamatosan fut
     while True:
         time.sleep(1)
         # Ellenőrizzük, hogy a folyamatok még mindig futnak-e
-        for name, proc in processes.items():
+        for name, proc in list(processes.items()):
             if proc and proc.poll() is not None:
                 print(f"Figyelmeztetés: {name} leállt.")
                 
+                # Attempt to read any output from the failed process
+                if proc.stdout:
+                    output = proc.stdout.read()
+                    if output:
+                        print(f"{name} kimenet: {output}")
+                
+                # Restart the process if it's one that should keep running
+                if name == "REST API":
+                    print(f"Újraindítás: {name}...")
+                    new_proc = run_process(["uvicorn", "src.api:app", "--host", "127.0.0.1", "--port", "8000"], "REST API")
+                    if new_proc:
+                        processes[name] = new_proc
+                        print(f"{name} újraindítva")
+                
+                if name == "Streamlit Dashboard":
+                    print(f"Újraindítás: {name}...")
+                    new_proc = run_process(["streamlit", "run", "src/streamlit_app.py", "--server.headless=true", "--server.port=8501"], "Streamlit Dashboard")
+                    if new_proc:
+                        processes[name] = new_proc
+                        print(f"{name} újraindítva")
+                        # Csak akkor nyitjuk meg a böngészőt újra, ha ez az első indítás
+                        if not streamlit_opened:
+                            time.sleep(5)  # Várunk, hogy a Streamlit elinduljon
+                            webbrowser.open("http://localhost:8501")
+                            print("Streamlit Dashboard elérhetősége: http://localhost:8501")
+                            streamlit_opened = True
 except KeyboardInterrupt:
     shutdown_gracefully(None, None)

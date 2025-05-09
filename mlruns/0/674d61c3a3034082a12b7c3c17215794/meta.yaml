@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/674d61c3a3034082a12b7c3c17215794/artifacts
+end_time: 1746768524450
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 674d61c3a3034082a12b7c3c17215794
+run_name: wistful-chimp-474
+run_uuid: 674d61c3a3034082a12b7c3c17215794
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746768513799
+status: 3
+tags: []
+user_id: T440
