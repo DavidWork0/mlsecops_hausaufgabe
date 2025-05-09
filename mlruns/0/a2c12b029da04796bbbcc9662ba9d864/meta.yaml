@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/a2c12b029da04796bbbcc9662ba9d864/artifacts
+end_time: 1746788956386
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a2c12b029da04796bbbcc9662ba9d864
+run_name: blushing-fowl-974
+run_uuid: a2c12b029da04796bbbcc9662ba9d864
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746788952688
+status: 4
+tags: []
+user_id: mluser

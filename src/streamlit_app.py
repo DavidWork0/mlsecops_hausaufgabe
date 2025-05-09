@@ -1,4 +1,4 @@
-"""
+﻿"""
 Streamlit dashboard az Iris modellhez.
 Lehetővé teszi predikciók készítését és az EvidentlyAI drift report megjelenítését.
 """
@@ -26,18 +26,23 @@ if st.button('Predikció'):
         'petal_width': petal_width
     }
     try:
-        response = requests.post('http://localhost:8000/predict', json=data)
+        # Use environment-aware API URL (works both in Docker and locally)
+        api_host = "localhost"  # Default for local development
+        
+        # For Docker container-to-container communication
+        if os.environ.get("DOCKER_MODE", "false").lower() == "true":
+            api_host = "localhost"  # Use localhost since we're in the same container
+            
+        api_url = f"http://{api_host}:8000/predict"
+        st.info(f"Connecting to API at: {api_url}")
+        
+        response = requests.post(api_url, json=data)
         if response.status_code == 200:
             pred = response.json()['prediction']
             label = ['setosa', 'versicolor', 'virginica'][pred]
             st.success(f'A predikált faj: {label}')
         else:
-            st.error('Hiba a predikció során!')
+            st.error(f'Hiba a predikció során! Status code: {response.status_code}')
+            st.error(f'Response: {response.text}')
     except Exception as e:
         st.error(f'Hiba: {e}')
-
-
-
-
-
-

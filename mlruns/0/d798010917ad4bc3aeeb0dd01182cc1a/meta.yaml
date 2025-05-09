@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/d798010917ad4bc3aeeb0dd01182cc1a/artifacts
+end_time: 1746788938791
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d798010917ad4bc3aeeb0dd01182cc1a
+run_name: debonair-ape-4
+run_uuid: d798010917ad4bc3aeeb0dd01182cc1a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746788934894
+status: 4
+tags: []
+user_id: mluser

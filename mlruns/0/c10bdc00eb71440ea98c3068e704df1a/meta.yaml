@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/c10bdc00eb71440ea98c3068e704df1a/artifacts
+end_time: 1746789824167
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c10bdc00eb71440ea98c3068e704df1a
+run_name: test_connectivity
+run_uuid: c10bdc00eb71440ea98c3068e704df1a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746789823943
+status: 3
+tags: []
+user_id: mluser

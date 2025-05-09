@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/eb5b660179cd4653b197e3feef1e2ac0/artifacts
+end_time: 1746788885816
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: eb5b660179cd4653b197e3feef1e2ac0
+run_name: unruly-doe-103
+run_uuid: eb5b660179cd4653b197e3feef1e2ac0
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746788881894
+status: 4
+tags: []
+user_id: mluser

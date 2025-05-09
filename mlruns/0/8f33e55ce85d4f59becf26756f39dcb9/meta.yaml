@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/8f33e55ce85d4f59becf26756f39dcb9/artifacts
+end_time: 1746789856679
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 8f33e55ce85d4f59becf26756f39dcb9
+run_name: capricious-sow-169
+run_uuid: 8f33e55ce85d4f59becf26756f39dcb9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746789853321
+status: 4
+tags: []
+user_id: mluser

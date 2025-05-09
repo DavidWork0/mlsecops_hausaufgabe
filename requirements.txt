@@ -1,11 +1,11 @@
-fastapi
-uvicorn
-mlflow
-scikit-learn
-pydantic
-numpy
-neptune
-#could be problematic
-apache-airflow
-pandas
-streamlit
+# Safe requirements for Docker builds
+# Dependencies that aren't installed separately in the Dockerfile
+plotly
+ipython
+boto3
+tabulate
+psutil
+PyYAML
+joblib
+threadpoolctl
+#apache-airflow  # Commented out as it's heavy and can cause issues

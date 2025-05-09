@@ -1,38 +1,107 @@
-1. Hozz létre egy virtuális környezetet (opcionális, de ajánlott):
-   python -m venv venv
-   venv\Scripts\activate
+# Docker használati útmutató
 
-cd C:\Users\T440\Documents\GitHub\mlsecops_ 
-pip install -r requirements.txt
+## Docker konténer indítása (ajánlott)
+
+1. Navigálj a projekt könyvtárába a parancssorban:
+   ```
+   cd C:\Users\T440\Documents\GitHub\mlsecops_haufaufgabe
+   ```
+
+2. Windows környezetben:
+   ```
+   .\run-docker.bat
+   ```
+
+   További opciók Windows-on:
+   ```
+   .\run-docker.bat --help    # Súgó megjelenítése
+   .\run-docker.bat --detach  # Háttérben futtatás
+   .\run-docker.bat --stop    # Konténer leállítása
+   ```
+
+   Vagy Linux/MacOS környezetben:
+   ```
+   chmod +x ./run-docker.sh
+   ./run-docker.sh
+   ```
+   
+   Linux/Mac további opciók:
+   ```
+   ./run-docker.sh --help     # Súgó megjelenítése
+   ./run-docker.sh --detach   # Háttérben futtatás
+   ./run-docker.sh --stop     # Konténer leállítása
+   ```
+
+   Vagy közvetlenül Docker parancsokkal:
+   ```
+   docker-compose up --build      # Interaktív módban
+   docker-compose up --build -d   # Háttérben
+   docker-compose down            # Leállítás
+   ```
+
+3. Szolgáltatások elérése:
+   - MLflow UI: http://localhost:5000
+   - FastAPI dokumentáció: http://localhost:8000/docs
+   - Streamlit dashboard: http://localhost:8501
+
+## Manuális futtatás (Docker nélkül)
+
+1. Hozz létre egy virtuális környezetet (ajánlott):
+   ```
+   python -m venv venv
+   venv\Scripts\activate    # Windows
+   source venv/bin/activate # Linux/MacOS
+   ```
 
 2. Telepítsd a szükséges csomagokat:
+   ```
    pip install -r requirements.txt
+   ```
 
-3. Indítsd el az MLflow UI-t egy külön terminálban:
-   mlflow ui
-   (A böngészőben: http://localhost:5000)
+3. Indítsd el az összes szolgáltatást egy scripttel:
+   ```
+   python src/run_all.py
+   ```
 
-4. Tanítsd meg a modellt és logold MLflow-ba:
-   python api.py
+   Vagy egyesével:
 
-5. Indítsd el a REST API szervert:
-   uvicorn api:app --reload
-   (A predikciós végpont: http://localhost:8000/predict)
-
-6. Futtasd az EvidentlyAI monitoring scriptet:
-   python evidently_monitoring.py
-   (A drift report: evidently_drift_report.html)
-
-7. Indítsd el a Streamlit dashboardot:
-   streamlit run streamlit_app.py
-
-8. (Opcionális) Docker használata:
-   docker build -t iris-ml-app .
-   docker run -p 8000:8000 iris-ml-app
+8. (Opcionális) Docker használata egyedi módon:
+   ```
+   # Haladó Docker build opciók
+   .\docker-builder.bat build
+   
+   # Docker erőforrások tisztítása
+   .\docker-builder.bat clean
+   
+   # Részletes segítség
+   .\docker-builder.bat help
+   ```
 
 9. (Opcionális) Airflow pipeline használata:
    - Telepítsd az Airflow-t (lásd: https://airflow.apache.org/docs/apache-airflow/stable/installation/index.html)
    - Másold az iris_ml_pipeline.py-t az Airflow 'dags' mappájába
    - Indítsd el az Airflow-t, és futtasd a DAG-ot a webes felületen
+
+## Hibaelhárítás
+
+Ha problémák merülnek fel a Docker konténer futtatása során:
+
+1. Ellenőrizd, hogy a Docker fut-e:
+   ```
+   docker --version
+   docker-compose --version
+   ```
+
+2. Ellenőrizd, hogy nincs-e már használatban a szükséges portok:
+   ```
+   netstat -ano | findstr "5000 8000 8501"
+   ```
+
+3. Docker logok ellenőrzése:
+   ```
+   docker-compose logs
+   ```
+
+4. Részletes hibaelhárítási segédlet: lásd `docker-troubleshooting.md`
 
 Tipp: Minden lépést külön terminálban érdemes futtatni Windows alatt.

@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/7cdf6814d3ce4832b19846821957bfff/artifacts
+end_time: 1746789898648
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 7cdf6814d3ce4832b19846821957bfff
+run_name: painted-eel-886
+run_uuid: 7cdf6814d3ce4832b19846821957bfff
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746789895243
+status: 4
+tags: []
+user_id: mluser

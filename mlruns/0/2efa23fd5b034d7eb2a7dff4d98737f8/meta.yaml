@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/2efa23fd5b034d7eb2a7dff4d98737f8/artifacts
+end_time: 1746789336872
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 2efa23fd5b034d7eb2a7dff4d98737f8
+run_name: smiling-loon-629
+run_uuid: 2efa23fd5b034d7eb2a7dff4d98737f8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746789333112
+status: 4
+tags: []
+user_id: mluser
