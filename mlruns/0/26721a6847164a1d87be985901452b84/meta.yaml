@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/26721a6847164a1d87be985901452b84/artifacts
+end_time: 1746863978633
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 26721a6847164a1d87be985901452b84
+run_name: agreeable-snipe-896
+run_uuid: 26721a6847164a1d87be985901452b84
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746863971365
+status: 3
+tags: []
+user_id: T440

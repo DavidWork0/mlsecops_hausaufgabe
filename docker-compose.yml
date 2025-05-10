@@ -1,12 +1,43 @@
-version: '3'
+version: '3.8'
+
 
 services:
-  app:
+  mlsecops-app:
     build:
       context: .
       dockerfile: src/Dockerfile
     ports:
-      - "8000:8000"
+      - "5000:5000"  # MLflow UI
+      - "8000:8000"  # FastAPI
+      - "8501:8501"  # Streamlit
     volumes:
-      - ./:/app
-    command: python run_all.py
+      - mlflow_data:/app/mlruns  # Using a named volume for MLflow data
+      - ./src:/app/src  # For hot-reloading during development
+    environment:
+      - PYTHONPATH=/app
+      - MLFLOW_TRACKING_URI=http://localhost:5000
+      - MLFLOW_ARTIFACT_ROOT=file:///app/mlruns
+      - PYTHONUNBUFFERED=1
+      - DOCKER_MODE=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/app/health_check.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - mlsecops-network
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "4G"
+    # Modified to run once and then sleep to keep container alive
+    command: bash -c "python src/run_all.py --run-once || python src/run_all.py && tail -f /dev/null"
+networks:
+  mlsecops-network:
+    driver: bridge
+    
+volumes:
+  mlflow_data:  # Named volume for MLflow data
