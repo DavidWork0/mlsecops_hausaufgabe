@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1746860421678
+current_stage: Production
+description: null
+last_updated_timestamp: 1746860421752
+name: IrisDecisionTree
+run_id: d473ea3bc84c4b019b761ca162b6948d
+run_link: null
+source: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/d473ea3bc84c4b019b761ca162b6948d/artifacts/model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/d473ea3bc84c4b019b761ca162b6948d/artifacts/model
+user_id: null
+version: 31

@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Building Docker image..."
+docker build -t mlsecops -f src/Dockerfile .
+echo "Running container with run_all.py..."
+docker run mlsecops

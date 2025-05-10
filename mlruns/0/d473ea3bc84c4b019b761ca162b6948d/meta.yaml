@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/T440/Documents/GitHub/mlsecops_/mlruns/0/d473ea3bc84c4b019b761ca162b6948d/artifacts
+end_time: 1746860421783
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d473ea3bc84c4b019b761ca162b6948d
+run_name: painted-cub-854
+run_uuid: d473ea3bc84c4b019b761ca162b6948d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746860416978
+status: 3
+tags: []
+user_id: T440
