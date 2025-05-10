@@ -9,3 +9,4 @@ neptune
 apache-airflow
 pandas
 streamlit
+seaborn
