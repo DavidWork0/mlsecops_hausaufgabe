@@ -5,8 +5,9 @@ Ez a script folyamatosan elindítja a szükséges lépéseket:
 - REST API indítása
 - neptuneai monitoring futtatása
 - Streamlit dashboard indítása
+- Airflow webserver és scheduler indítása
 
-A REST API, MLflow UI és Streamlit külön folyamatban futnak, így a script minden szükséges komponenst elindít.
+A REST API, MLflow UI, Streamlit és Airflow külön folyamatban futnak, így a script minden szükséges komponenst elindít.
 """
 
 import subprocess
@@ -15,6 +16,7 @@ import webbrowser
 import os
 import sys
 import signal
+import argparse
 
 
 def run_process(command, name):
@@ -101,6 +103,20 @@ def shutdown_gracefully(sig, frame):
                                 webbrowser.open("http://localhost:8501")
                                 print("Streamlit Dashboard elérhetősége: http://localhost:8501")
                                 streamlit_opened = True
+                    
+                    if name == "Airflow Webserver":
+                        print(f"Újraindítás: {name}...")
+                        new_proc = run_process(["airflow", "webserver", "-p", "8080"], "Airflow Webserver")
+                        if new_proc:
+                            processes[name] = new_proc
+                            print(f"{name} újraindítva")
+                            
+                    if name == "Airflow Scheduler":
+                        print(f"Újraindítás: {name}...")
+                        new_proc = run_process(["airflow", "scheduler"], "Airflow Scheduler")
+                        if new_proc:
+                            processes[name] = new_proc
+                            print(f"{name} újraindítva")
     except KeyboardInterrupt:
         shutdown_gracefully(None, None)
 
@@ -116,6 +132,11 @@ def main(processes):
     print(f"Current directory: {os.getcwd()}")
     print("Listing installed packages:")
     os.system("pip list")
+    
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description="Run all components of the ML system")
+    parser.add_argument("--run-once", action="store_true", help="Run the script once without monitoring processes")
+    args = parser.parse_args()
     
     # Set the host based on whether we're in Docker or not
     host = "0.0.0.0" if os.environ.get("DOCKER_MODE") == "true" else "127.0.0.1"
@@ -159,6 +180,7 @@ def main(processes):
     except subprocess.CalledProcessError as e:
         print(f"Hiba a Neptune AI monitoring futtatása során: {e}")
 
+    # Streamlit Dashboard indítása
     streamlit_proc = run_process(["streamlit", "run", "src/streamlit_app.py", "--server.headless=true", "--server.port=8501", "--server.address=0.0.0.0"], "Streamlit Dashboard")
     time.sleep(5)  # Több időt adunk a Streamlit indulásához
     if streamlit_proc:
@@ -168,12 +190,23 @@ def main(processes):
     else:
         print("Hiba: Streamlit Dashboard nem indult el")
 
+    # Airflow esetén a webserver és scheduler már fut a dockerben
+    # Itt csak a böngészőt nyitjuk meg
+    if host == "127.0.0.1":
+        webbrowser.open("http://localhost:8080")
+    print("Airflow UI elérhetősége: http://localhost:8080")
+
     # Folyamatok tárolása a megfelelő leállításhoz
     processes = {
         "MLflow UI": mlflow_proc,
         "REST API": restapi_proc,
         "Streamlit Dashboard": streamlit_proc
     }
+
+    # If run-once flag is set, return processes and exit without monitoring
+    if args.run_once:
+        print("\nEgyszeri futtatás kész. A futó folyamatokat a Docker kezeli.")
+        return processes
 
     print("\nMinden komponens elindítva. Leállításhoz zárd be ezt a scriptet vagy nyomj Ctrl+C.")
     print("Run_all.py completed successfully")

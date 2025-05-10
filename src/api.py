@@ -49,12 +49,10 @@ def predict(input: IrisInput):
     prediction = model.predict(data)
     return {"prediction": int(prediction[0])}
 
-if __name__ == "__main__":
+def train_and_register_model():
     """
-    Ha futtatod: python api.py
-    - Betanítja a modellt
-    - Logolja MLflow-ba
-    - Regisztrálja a model registry-be 'IrisDecisionTree' néven
+    Function to train and register the model.
+    This is extracted from the __main__ block to be reusable by Airflow.
     """
     import pandas as pd
     from sklearn.datasets import load_iris
@@ -99,5 +97,15 @@ if __name__ == "__main__":
             print(f"Model automatikusan beállítva Production stage-re: verzió {result.version}")
         except MlflowException as e:
             print(f"Model regisztrációs hiba vagy már létezik: {e}")
-
+    
     print("Tanítás, logolás, regisztráció kész.")
+    return acc
+
+if __name__ == "__main__":
+    """
+    Ha futtatod: python api.py
+    - Betanítja a modellt
+    - Logolja MLflow-ba
+    - Regisztrálja a model registry-be 'IrisDecisionTree' néven
+    """
+    train_and_register_model()
