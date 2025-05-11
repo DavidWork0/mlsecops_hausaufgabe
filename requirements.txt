@@ -10,3 +10,4 @@ apache-airflow
 pandas
 streamlit
 seaborn
+flask_appbuilder

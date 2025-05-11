@@ -1,27 +1,15 @@
 FROM apache/airflow:3.0.0
 
-# Set the working directory
-WORKDIR /usr/local/airflow
+USER root
 
-# Install any necessary dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    vim \
-    && apt-get clean
+# Create directories
+RUN mkdir -p /app/scripts
 
-# Copy initialization scripts
-COPY init-scripts /init-scripts
-RUN chmod +x /init-scripts/*.sh
+# Copy scripts
+COPY scripts/ /app/scripts/
+RUN chmod +x /app/scripts/*.py || true
 
-# Copy the admin user creation script
-COPY app/create_admin_user.py /app/create_admin_user.py
-RUN chmod +x /app/create_admin_user.py
+USER airflow
 
-# Expose the port
-EXPOSE 8080
-
-# Set the entrypoint
-ENTRYPOINT ["entrypoint.sh"]
-
-# Default command
-CMD ["webserver"]
+# Run configuration update before starting Airflow
+ENTRYPOINT ["bash", "-c", "python /app/scripts/update_airflow_config.py && exec airflow standalone"]

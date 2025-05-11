@@ -1,0 +1,7 @@
+services:
+  mlsecops-app:
+    # This file should only contain overrides, not the complete service definition
+    volumes:
+      - ./scripts:/app/scripts
+    environment:
+      - PRE_START_CMD=python /app/scripts/update_airflow_config.py
