@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   mlsecops-app:
     build:
@@ -7,12 +9,16 @@ services:
       - "5000:5000"  # MLflow UI
       - "8000:8000"  # FastAPI
       - "8501:8501"  # Streamlit
-      - "8080:8080"  # Airflow UI
+     # - "8080:8080"  # Airflow UI
     volumes:
-      - mlflow_data:/app/mlruns  # Using a named volume for MLflow data
-      - ./src:/app/src  # For hot-reloading during development
-      - airflow_data:/app/airflow  # Volume for Airflow data
+      - mlflow_data:/app/mlruns  # Named volume for MLflow data
+      - ./src:/app/src           # For hot-reloading during development
+      - airflow_data:/app/airflow # Volume for Airflow data
       - ./scripts:/app/scripts
+      - ./src/airflow/dags:/dags
+      - ./src/airflow/dags:/opt/airflow/dags
+      - ./src/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./src/airflow:/app/src/airflow  # Mount the whole airflow folder for file access/copy
     environment:
       - PYTHONPATH=/app
       - MLFLOW_TRACKING_URI=http://localhost:5000
@@ -20,19 +26,24 @@ services:
       - PYTHONUNBUFFERED=1
       - DOCKER_MODE=true
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
-      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////app/airflow/airflow.db
-      - AIRFLOW__CORE__DAGS_FOLDER=/app/src/airflow/dags
-      - AIRFLOW__WEBSERVER__WEB_SERVER_HOST=0.0.0.0
-      - AIRFLOW__WEBSERVER__WEB_SERVER_PORT=8080
+      - AIRFLOW__CORE__DAGS_FOLDER=/dags
+      - AIRFLOW__DAG_PROCESSOR_MANAGER__BUNDLES_FOLDER=/dags
+      - AIRFLOW__DAG_BUNDLES__DAGS_FOLDER=/dags
+      - AIRFLOW__API__HOST=0.0.0.0
+      - AIRFLOW__API__PORT=8080
       - AIRFLOW__WEBSERVER__BASE_URL=http://localhost:8080
-      - AIRFLOW_ADMIN_USER=admin
-      - AIRFLOW_ADMIN_PASSWORD=admin
-      - AIRFLOW_ADMIN_EMAIL=admin@example.com
-      - AIRFLOW_ADMIN_FIRSTNAME=Admin
-      - AIRFLOW_ADMIN_LASTNAME=User
       - AIRFLOW_HOME=/app/airflow
+      # Official Airflow 3.0+ admin user auto-creation variables:
+      - _AIRFLOW_DB_MIGRATE=true
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
+      - _AIRFLOW_WWW_USER_FIRSTNAME=Admin
+      - _AIRFLOW_WWW_USER_LASTNAME=User
+      - _AIRFLOW_WWW_USER_EMAIL=admin@example.com
+      - _AIRFLOW_WWW_USER_ROLE=Admin
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "/app/health_check.sh"]
@@ -46,28 +57,45 @@ services:
       resources:
         limits:
           cpus: "2"
-          memory: "4G"
+          memory: "5G"
     command: >
       bash -c "
+      set -e
       mkdir -p /app/airflow &&
+      mkdir -p /airflow/dags &&
+      cp -r /app/src/airflow/dags/* /airflow/dags/ &&
+      echo 'DAG folder configured as:' &&
+      airflow config get-value core dags_folder &&
+      echo 'DAG folder contents:' &&
+      ls -la \$(airflow config get-value core dags_folder) &&
       airflow db migrate &&
-      airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin --if-not-exists &&
-      airflow webserver -p 8080 & 
-      airflow scheduler & 
-      python src/run_all.py && 
-      tail -f /dev/null"
+      airflow api-server -p 8080 &
+      sleep 10 &&
+      airflow scheduler &
+      python src/run_all.py &&
+      tail -f /dev/null
+      "
 
-  app:
+  airflow-app:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+       - "8080:8080"  # Airflow UI
     volumes:
+      - mlflow_data:/app/mlruns  # Named volume for MLflow data
+      - ./src:/app/src           # For hot-reloading during development
+      - airflow_data:/app/airflow # Volume for Airflow data
       - ./scripts:/app/scripts
+      - ./src/airflow/dags:/dags
+      - ./src/airflow/dags:/opt/airflow/dags
+      - ./src/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+      - ./src/airflow:/app/src/airflow  # Mount the whole airflow folder for file access/copy
 
 networks:
   mlsecops-network:
     driver: bridge
-    
+
 volumes:
-  mlflow_data:  # Named volume for MLflow data
-  airflow_data:  # Named volume for Airflow data
+  mlflow_data:
+  airflow_data:

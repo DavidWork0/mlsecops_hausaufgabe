@@ -17,7 +17,7 @@ import os
 import sys
 import signal
 import argparse
-
+import shutil
 
 def run_process(command, name):
     print(f"Indítás: {name}...")
@@ -163,16 +163,6 @@ def main(processes):
     except subprocess.CalledProcessError as e:
         print(f"Hiba a modell tanítása során: {e}")
 
-    # REST API indítása háttérben
-    restapi_proc = run_process(["uvicorn", "src.api:app", "--host", host, "--port", "8000"], "REST API")
-    time.sleep(2)
-    if restapi_proc:
-        if host == "127.0.0.1":
-            webbrowser.open("http://localhost:8000/docs")
-        print("REST API elérhetősége: http://localhost:8000/docs")
-    else:
-        print("Hiba: REST API nem indult el")
-
     # Neptun AI monitoring futtatása
     try:
         subprocess.run(["python", "src/neptuneai_monitoring.py"], check=True)
@@ -190,17 +180,72 @@ def main(processes):
     else:
         print("Hiba: Streamlit Dashboard nem indult el")
 
-    # Airflow esetén a webserver és scheduler már fut a dockerben
-    # Itt csak a böngészőt nyitjuk meg
+    # Airflow webserver és scheduler indítása
+    
+    # Start Airflow webserver
+    airflow_web_proc = run_process(
+        ["airflow", "webserver", "--port", "8080"], "Airflow Webserver"
+    )
+    time.sleep(5)  # Give Airflow webserver time to start
+    # Copy airflow.cfg to /airflow/airflow.cfg if it doesn't exist
+   
+    src_cfg = os.path.join(os.getcwd(), "src", "airflow", "airflow.cfg")
+    dst_cfg = os.path.join("/", "airflow", "airflow.cfg")
+    try:
+        if not os.path.exists(dst_cfg):
+            os.makedirs(os.path.dirname(dst_cfg), exist_ok=True)
+            shutil.copyfile(src_cfg, dst_cfg)
+            print(f"Copied {src_cfg} to {dst_cfg}")
+        else:
+            print(f"{dst_cfg} already exists.")
+    except Exception as e:
+        print(f"Failed to copy airflow.cfg: {e}")
+
+    # Copy DAGs to /airflow/dags
+    src_dags = os.path.join(os.getcwd(), "src", "airflow", "dags")
+    dst_dags = os.path.join("/", "airflow", "dags")
+    try:
+        if os.path.exists(src_dags):
+            if not os.path.exists(dst_dags):
+                os.makedirs(dst_dags, exist_ok=True)
+            for filename in os.listdir(src_dags):
+                src_file = os.path.join(src_dags, filename)
+                dst_file = os.path.join(dst_dags, filename)
+                # Only copy if source and destination are different files
+                if os.path.isfile(src_file) and (os.path.abspath(src_file) != os.path.abspath(dst_file)):
+                    shutil.copyfile(src_file, dst_file)
+            print(f"Copied DAGs from {src_dags} to {dst_dags}")
+        else:
+            print(f"Source DAGs folder {src_dags} does not exist.")
+    except Exception as e:
+        print(f"Failed to copy DAGs: {e}")
+
+    airflow_sched_proc = run_process(
+        ["airflow", "scheduler"], "Airflow Scheduler"
+    )
+    time.sleep(2)
+
     if host == "127.0.0.1":
         webbrowser.open("http://localhost:8080")
     print("Airflow UI elérhetősége: http://localhost:8080")
+
+    # REST API indítása háttérben
+    restapi_proc = run_process(["uvicorn", "src.api:app", "--host", host, "--port", "8000"], "REST API")
+    time.sleep(2)
+    if restapi_proc:
+        if host == "127.0.0.1":
+            webbrowser.open("http://localhost:8000/docs")
+        print("REST API elérhetősége: http://localhost:8000/docs")
+    else:
+        print("Hiba: REST API nem indult el")
 
     # Folyamatok tárolása a megfelelő leállításhoz
     processes = {
         "MLflow UI": mlflow_proc,
         "REST API": restapi_proc,
-        "Streamlit Dashboard": streamlit_proc
+        "Streamlit Dashboard": streamlit_proc,
+        "Airflow Webserver": airflow_web_proc,
+        "Airflow Scheduler": airflow_sched_proc
     }
 
     # If run-once flag is set, return processes and exit without monitoring

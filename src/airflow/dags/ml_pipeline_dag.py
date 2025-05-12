@@ -5,8 +5,7 @@ This DAG orchestrates the model training, evaluation, and deployment process.
 
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.utils.dates import days_ago
+from airflow.providers.standard.operators.python import PythonOperator
 import os
 import sys
 import subprocess
@@ -30,21 +29,35 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
+def notify_dashboard(status, task):
+    """Notify the dashboard about the current DAG/task status."""
+    try:
+        payload = {"task": task, "status": status}
+        # Use the dashboard's service name or host.docker.internal if on the same network
+        requests.post("http://host.docker.internal:8000/dag_status", json=payload, timeout=2)
+    except Exception as e:
+        print(f"Failed to notify dashboard: {e}")
+
 def train_model():
     """Train the ML model and register it with MLflow"""
     print("Starting model training and registration")
+    notify_dashboard("running", "train_model")
     train_and_register_model()
+    notify_dashboard("success", "train_model")
     return "Model training completed"
 
 def run_model_monitoring():
     """Run the Neptune AI model monitoring"""
     print("Starting model monitoring with Neptune AI")
+    notify_dashboard("running", "run_monitoring")
     run_monitoring()
+    notify_dashboard("success", "run_monitoring")
     return "Monitoring completed"
 
 def test_api_endpoint():
     """Test the FastAPI endpoint to ensure it's working"""
     print("Testing API endpoint")
+    notify_dashboard("running", "test_api")
     max_retries = 5
     retry_delay = 5
     
@@ -58,10 +71,12 @@ def test_api_endpoint():
                 "petal_width": 0.2
             }
             
-            response = requests.post("http://localhost:8000/predict", json=test_data)
+            # Changed from "http://localhost:8000/predict" to "http://host.docker.internal:8000/predict"
+            response = requests.post("http://host.docker.internal:8000/predict", json=test_data)
             response.raise_for_status()  # Raise an error for bad responses
             
             print(f"API test successful: {response.json()}")
+            notify_dashboard("success", "test_api")
             return f"API test succeeded with response: {response.json()}"
         except Exception as e:
             print(f"API test attempt {attempt+1}/{max_retries} failed: {e}")
@@ -69,6 +84,7 @@ def test_api_endpoint():
                 print(f"Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
             else:
+                notify_dashboard("failed", "test_api")
                 raise Exception(f"API test failed after {max_retries} attempts")
 
 # Create the DAG
@@ -76,8 +92,7 @@ with DAG(
     'ml_pipeline',
     default_args=default_args,
     description='ML Pipeline for training, monitoring, and deploying models',
-    schedule_interval=timedelta(days=1),
-    start_date=days_ago(1),
+    schedule=timedelta(days=1),
     catchup=False,
     tags=['ml', 'pipeline', 'mlsecops'],
 ) as dag:
