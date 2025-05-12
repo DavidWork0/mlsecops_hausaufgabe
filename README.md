@@ -7,7 +7,7 @@ Done project for MLSECOPS. Ats David
 
 class neptune_ai:
     project = "YOURPROJECTNAME"   
-    api_token = "eyJhcGlfYWRkcmVz....-----.....MyMTYxNjUifQ==" 
+    api_token = "YOURAPITOKEN" 
 
 -Add your project name instead of YOURPROJECTNAME and add your api token from neptuneai.
 ![image](https://github.com/user-attachments/assets/85172f9d-1e34-421b-a076-2ab54ffc434f)
