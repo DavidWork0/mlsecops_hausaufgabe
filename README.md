@@ -1,4 +1,4 @@
-# mlsecops_haufaufgabe
+# mlsecops_hausaufgabe
 Done project for MLSECOPS. Ats David
 
 **BEFORE RUNNING!**
