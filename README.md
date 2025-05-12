@@ -5,9 +5,9 @@ Done project for MLSECOPS. Ats David
 -create credentials.py and put it into src folder
 -syntax can be observed in documentation (picture) and also here:
 
-class neptune_ai:
-    project = "YOURPROJECTNAME"   
-    api_token = "YOURAPITOKEN" 
+    class neptune_ai:
+        project = "YOURPROJECTNAME"   
+        api_token = "YOURAPITOKEN" 
 
 -Add your project name instead of YOURPROJECTNAME and add your api token from neptuneai.
 ![image](https://github.com/user-attachments/assets/85172f9d-1e34-421b-a076-2ab54ffc434f)
